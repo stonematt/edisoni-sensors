@@ -1,8 +1,8 @@
 #!/usr/bin/env python  
-  
+#These are dependencies  
 import mraa  
-import time  
-  
+import time
+#13 is built in led
 led = mraa.Gpio(13)  
 led.dir(mraa.DIR_OUT)  
   
