@@ -12,12 +12,11 @@ Task: Flash Edison and Connect to Wireless Network (per Intel)
 
 Task: Writing Data to and from Edison
 
-Inconveniently, Edison's kernel does not support samba shares.  This may precipitate a future defection from the Edison to Raspberry Pi or other device.  Instead of samba, the ssh file system function (sshfs) is used to mount directories from Edison onto other computers:
+Inconveniently, Edison's kernel does not support samba shares. Instead of samba, the ssh file system function (sshfs) is used to mount directories from Edison onto other computers:
 
 Install sshfs on the workstation and server:
 	apt-get install sshfs
-Keys are generated in the workstation and the server and then shared with the Edison via the 
-ssh key copying function: 
+Keys are generated in the workstation and the server and then shared with the Edison (root@192.168.1.20 in this example) using the ssh key copying function: 
 	ssh-keygen -t rsa
 	ssh-copy-id -i id_rsa.pub root@192.168.1.20
 Note that ssh-copy-id is not available from Edison.
@@ -25,11 +24,13 @@ In general sshfs is used to mount some or all of the Edison's file system onto t
 	sshfs <edison's@ip_address:path> ,<server or workstation local path>
 In our case, from workstation and server: 
 	sshfs root@192.168.1.20:/home/root/ edroot -o reconnect -C -o  workaround=all
-This mounts Edison's /home/root at local ~/edroot.   The “-o reconnect” option directs sshfs to reconnect if the connection to the Edison is lost.  It was found that in the absence of this option  terminal windows accessing the mounted directories would freeze if the Edison was powered off.  Also to prevent this freezing, the ssh configuration files were changed by adding the following to /etc/ssh/ssh_config:
+This mounts Edison's /home/root at local ~/edroot.   The “-o reconnect” option directs sshfs to reconnect if the connection to the Edison is lost.  Terminal windows accessing the mounted directories freeze when the Edison is powered off (recovery possible with: fusermount -u edroot or kill <ssh PID(s)>).   The  ssh configuration files were changed by adding the following to /etc/ssh/ssh_config:
 
 	ServerAliveInterval 15
 	ServerAliveCountMax 3
 
-After the behavior of of sshfs is understood, add the line to /etc/fstab to establish connection on boot. 
+Add the line to /etc/fstab to establish connection on boot. 
+
+
 
 Task: Store and Process Incoming Data
