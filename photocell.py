@@ -7,6 +7,7 @@
 #These are dependencies  
 import mraa  
 import time
+import datetime
 import sys
 
 #Pin A0 receives photocell
@@ -16,18 +17,18 @@ x=0
 
 photocell = mraa.Aio(pcell_pin)  
   
-print "hello world!"
+print "Photocell Data Stream.  Use Ctrl-C to exit."
 target = open("pcell_data", 'w')
 while x < 200:
 
     #read photocell value, write to file
     pcell_value=float(photocell.read())
     s = str(pcell_value)
-    target.write(s)
+    target.write(now, s)
     target.write("\n")
     time.sleep(0.9)
     x = x + 1
-    print "photocell value: ", pcell_value, " loop counter: ", x
+    print  "Now: ", now, "photocell value: ", pcell_value
 
     
 target.close()
