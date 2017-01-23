@@ -3,11 +3,12 @@
 # env is a command that manages the environment.
 # it's probably not setup on edison, so use the explicit path  
 #!/usr/bin/env python  
+#This script reads photocell sensor and writes values to a file
 
 #These are dependencies  
 import mraa  
 import time
-import datetime
+from datetime import datetime
 import sys
 
 #Pin A0 receives photocell
@@ -24,11 +25,15 @@ while x < 200:
     #read photocell value, write to file
     pcell_value=float(photocell.read())
     s = str(pcell_value)
-    target.write(now, s)
+    now = str(datetime.now())
+    sinceepoch = str(time.time())
+    target.write(sinceepoch)
+    target.write(", ")
+    target.write(s)
     target.write("\n")
-    time.sleep(0.9)
+    time.sleep(10)
     x = x + 1
-    print  "Now: ", now, "photocell value: ", pcell_value
+    print  "Unix time: ",sinceepoch, "Now: ", now, "photocell value: ", pcell_value
 
     
 target.close()
